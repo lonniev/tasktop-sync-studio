@@ -25,36 +25,50 @@ package "unrar" do
   action :upgrade
 end
 
-directory "#{node['tasktop-sync-studio']['zipDir']}" do
+getHomeCmd = Mixlib::ShellOut.new("useradd -D|grep HOME|cut -d '=' -f 2")
+getHomeCmd.run_command
+
+homeDir = getHomeCmd.stdout.chomp
+
+zipDir = node['tasktop-sync-studio']['zipDir'].sub( /~/, "#{homeDir}/" )
+
+directory "#{zipDir}" do
   owner 'root'
   group 'root'
   mode '0644'
+  recursive true
   action :create
 end
 
+rarFile = node['tasktop-sync-studio']['rarFile'].sub( /~/, "#{homeDir}/" )
+zipFile = node['tasktop-sync-studio']['zipFile'].sub( /~/, "#{homeDir}/" )
+
 execute "reassemble zip from rar fragments" do
-  command "unrar x -y #{node['tasktop-sync-studio']['rarFile']} #{node['tasktop-sync-studio']['zipDir']}"
-  creates #{node['tasktop-sync-studio']['zipFile']}
+  command "unrar x -y #{rarFile} #{zipDir}"
+  creates "#{zipFile}"
 end
 
 execute "unzip the installer" do
-  command "cd #{node['tasktop-sync-studio']['zipDir']}; unzip #{node['tasktop-sync-studio']['zipFile']}"
-  creates #{node['tasktop-sync-studio']['zipDir']}/mksclient.bin
+  command "cd #{zipDir}; unzip #{zipFile}"
+  creates "#{zipDir}/mksclient.bin"
 end
 
-directory "#{node['tasktop-sync-studio']['installDir']}" do
+installDir = node['tasktop-sync-studio']['installDir'].sub( /~/, "#{homeDir}/" )
+
+directory "#{installDir}" do
   owner 'root'
   group 'root'
   mode '0644'
+  recursive true
   action :create
 end
 
 execute "silently install the client" do
-  command "./mksclient.bin -DinstallLocation=#{node['tasktop-sync-studio']['installDir']} -i silent"
-  creates #{node['tasktop-sync-studio']['installDir']}/foo
+  command "./mksclient.bin -DinstallLocation=#{installDir} -i silent"
+  creates "#{installDir}/foo"
 end
 
-directory "#{node['tasktop-sync-studio']['zipDir']}" do
+directory "#{zipDir}" do
   action :delete
 end
 
