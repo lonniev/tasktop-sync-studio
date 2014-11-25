@@ -25,6 +25,10 @@ package "unrar" do
   action :upgrade
 end
 
+package "unzip" do
+  action :upgrade
+end
+
 getHomeCmd = Mixlib::ShellOut.new("useradd -D|grep HOME|cut -d '=' -f 2")
 getHomeCmd.run_command
 
