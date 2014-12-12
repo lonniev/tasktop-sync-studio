@@ -29,6 +29,6 @@ end
 #end
 
 execute 'Install Chrome' do
-  command "msiexec /qn /i #{chromeFile}"
+  command "msiexec /qn /i #{chromeFile.expand_path()}"
   action :run
 end
