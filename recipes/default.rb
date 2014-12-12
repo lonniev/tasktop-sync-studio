@@ -24,6 +24,11 @@ remote_file chromeFile.to_s do
   action :create_if_missing
 end
 
-package chromeFile.to_s do
-  action :install
+#package chromeFile.to_s do
+#  action :install
+#end
+
+execute 'Install Chrome' do
+  command "msiexec /qn /i #{chromeFile}"
+  action :run
 end
