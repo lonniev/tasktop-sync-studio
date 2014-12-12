@@ -17,66 +17,7 @@
 # limitations under the License.
 #
 
-package "rar" do
-  action :upgrade
+windows_package 'Google Chrome' do
+  source 'https://dl-ssl.google.com/tag/s/appguid%3D%7B8A69D345-D564-463C-AFF1-A69D9E530F96%7D%26iid%3D%7B806F36C0-CB54-4A84-A3F3-0CF8A86575E0%7D%26lang%3Den%26browser%3D3%26usagestats%3D0%26appname%3DGoogle%2520Chrome%26needsadmin%3Dfalse/edgedl/chrome/install/GoogleChromeStandaloneEnterprise.msi'
+  action :install
 end
-  
-package "unrar" do
-  action :upgrade
-end
-
-package "unzip" do
-  action :upgrade
-end
-
-getHomeCmd = Mixlib::ShellOut.new("useradd -D|grep HOME|cut -d '=' -f 2")
-getHomeCmd.run_command
-
-homeDir = getHomeCmd.stdout.chomp
-
-zipDir = node['tasktop-sync-studio']['zipDir'].sub( /~/, "#{homeDir}/" )
-
-directory "#{zipDir}" do
-  owner 'root'
-  group 'root'
-  mode '0644'
-  recursive true
-  action :create
-end
-
-rarFile = node['tasktop-sync-studio']['rarFile'].sub( /~/, "#{homeDir}/" )
-zipFile = node['tasktop-sync-studio']['zipFile'].sub( /~/, "#{homeDir}/" )
-
-execute "reassemble zip from rar fragments" do
-  command "unrar x -y #{rarFile} #{zipDir}"
-  creates "#{zipFile}"
-end
-
-execute "unzip the installer" do
-  command "cd #{zipDir}; unzip #{zipFile}"
-  creates "#{zipDir}/mksclient.bin"
-end
-
-installDir = node['tasktop-sync-studio']['installDir'].sub( /~/, "#{homeDir}/" )
-
-directory "#{installDir}" do
-  owner 'root'
-  group 'root'
-  mode '0644'
-  recursive true
-  action :create
-end
-
-execute "silently install the client" do
-  command "./mksclient.bin -DinstallLocation=#{installDir} -i silent"
-  creates "#{installDir}/foo"
-end
-
-directory "#{zipDir}" do
-  action :delete
-end
-
-
-
-
-    
