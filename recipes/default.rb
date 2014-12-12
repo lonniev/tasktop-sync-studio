@@ -24,7 +24,6 @@ remote_file chromeFile.to_s do
   action :create_if_missing
 end
 
-package 'Google Chrome' do
-  source chromeFile.to_s
+package chromeFile.to_s do
   action :install
 end
