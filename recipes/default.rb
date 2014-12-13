@@ -28,7 +28,9 @@ end
 #  action :install
 #end
 
+dosPath = chromeFile.expand_path().to_s.gsub( '/', '\\' )
+
 execute 'Install Chrome' do
-  command "msiexec /qn /i #{chromeFile.expand_path().to_s.gsub('/', '\')}"
+  command "msiexec /qn /i #{dosPath}"
   action :run
 end
