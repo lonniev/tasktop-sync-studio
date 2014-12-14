@@ -17,30 +17,30 @@
 # limitations under the License.
 #
 
-chromeFile = Pathname.new( Chef::Config[:file_cache_path] ).join( "GoogleChromeStandaloneEnterprise.msi" )
-
-remote_file chromeFile.to_s do
-  source "https://dl-ssl.google.com/tag/s/appguid%3D%7B8A69D345-D564-463C-AFF1-A69D9E530F96%7D%26iid%3D%7B806F36C0-CB54-4A84-A3F3-0CF8A86575E0%7D%26lang%3Den%26browser%3D3%26usagestats%3D0%26appname%3DGoogle%2520Chrome%26needsadmin%3Dfalse/edgedl/chrome/install/GoogleChromeStandaloneEnterprise.msi"
-  action :create_if_missing
-end
+#chromeFile = Pathname.new( Chef::Config[:file_cache_path] ).join( "GoogleChromeStandaloneEnterprise.msi" )
+#
+#remote_file chromeFile.to_s do
+#  source "https://dl-ssl.google.com/tag/s/appguid%3D%7B8A69D345-D564-463C-AFF1-A69D9E530F96%7D%26iid%3D%7B806F36C0-CB54-4A84-A3F3-0CF8A86575E0%7D%26lang%3Den%26browser%3D3%26usagestats%3D0%26appname%3DGoogle%2520Chrome%26needsadmin%3Dfalse/edgedl/chrome/install/GoogleChromeStandaloneEnterprise.msi"
+#  action :create_if_missing
+#end
 
 #package chromeFile.to_s do
 #  action :install
 #end
 
-dosPath = chromeFile.expand_path().to_s.gsub( '/', '\\' )
+#dosPath = chromeFile.expand_path().to_s.gsub( '/', '\\' )
 
-execute 'Install Chrome' do
-  command "msiexec /qn /i #{dosPath}"
-  action :run
-end
-
-windows_package 'wget' do
-  source 'http://sourceforge.net/projects/gnuwin32/files/wget/1.11.4-1/wget-1.11.4-1-setup.exe'
-  installer_type :custom
-  
+windows_package 'Chrome' do
+  source "https://dl-ssl.google.com/tag/s/appguid%3D%7B8A69D345-D564-463C-AFF1-A69D9E530F96%7D%26iid%3D%7B806F36C0-CB54-4A84-A3F3-0CF8A86575E0%7D%26lang%3Den%26browser%3D3%26usagestats%3D0%26appname%3DGoogle%2520Chrome%26needsadmin%3Dfalse/edgedl/chrome/install/GoogleChromeStandaloneEnterprise.msi"
   action :install
 end
+
+#windows_package 'wget' do
+#  source 'http://sourceforge.net/projects/gnuwin32/files/wget/1.11.4-1/wget-1.11.4-1-setup.exe'
+#  installer_type :custom
+#  
+#  action :install
+#end
 
 # Using wget to download content protected by referer and cookies.
 # 1. get base url and save its cookies in file
