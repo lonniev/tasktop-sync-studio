@@ -39,7 +39,7 @@ remoteFile = "#{repoSite}?service=files&t=#{repoId}&download&path=#{filePath}"
 
 cookieFile = Pathname.new( Chef::Config[:file_cache_path] ).join( "cookies.txt" )
 
-wget = 'c:\Program/ Files\GnuWin32\bin\wget.exe'
+wget = '"c:\Program Files\GnuWin32\bin\wget.exe"'
 
 execute 'authenticate at Tasktop and save session cookies' do
   command %Q(#{wget} --post-data "password=#{repoPass}" --no-check-certificate --cookies=on --keep-session-cookies --save-cookies=#{cookieFile} "#{repoSite}?service=files&t=#{repoId}" -O #{junkFile})
