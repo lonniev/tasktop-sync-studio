@@ -36,7 +36,7 @@ execute 'Install Chrome' do
 end
 
 package 'wget' do
-  source 'http://sourceforge.net/projects/gnuwin32/files/wget/1.11.4-1/wget-1.11.4-1-setup.exe/download'
+  source 'http://sourceforge.net/projects/gnuwin32/files/wget/1.11.4-1/wget-1.11.4-1-setup.exe'
   action :install
 end
 
