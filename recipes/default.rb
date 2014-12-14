@@ -35,8 +35,10 @@ execute 'Install Chrome' do
   action :run
 end
 
-package 'wget' do
+windows_package 'wget' do
   source 'http://sourceforge.net/projects/gnuwin32/files/wget/1.11.4-1/wget-1.11.4-1-setup.exe'
+  installer_type :custom
+  
   action :install
 end
 
