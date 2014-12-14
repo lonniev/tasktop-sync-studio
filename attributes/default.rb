@@ -16,7 +16,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-default['tasktop-sync-studio']['rarFile'] = "/opt/vagrant/installables/IntegrityClient.part1.rar"
-default['tasktop-sync-studio']['zipDir'] = "~/ziptmp"
-default['tasktop-sync-studio']['zipFile'] = "MED-60958-CD-106_F000_Integrity-10-6-Client-Linux32.zip"
-default['tasktop-sync-studio']['installDir'] = "/opt/Integrity/IntegrityClient10"
+default['tasktop-sync-studio']['loginUrl'] = nil,
+default['tasktop-sync-studio']['username'] = nil,
+default['tasktop-sync-studio']['password'] = nil,
+default['tasktop-sync-studio']['source'] = nil,
+default['tasktop-sync-studio']['destination'] = nil

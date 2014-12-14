@@ -34,7 +34,7 @@ remoteFile = node['tasktop-sync-studio']['source']
 
 localFile = node['tasktop-sync-studio']['destination']
 
-junkFile = Pathname.new( "wget_junk" )  
+junkFile = "wget_junk"  
 cookieFile = node['tasktop-sync-studio']['cookieFile'] || "cookies.txt"
 
 wget = '"c:\Program Files\GnuWin32\bin\wget.exe"'
