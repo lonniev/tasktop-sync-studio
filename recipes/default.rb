@@ -32,7 +32,7 @@ repoPass = node['tasktop-sync-studio']['password']
 
 remoteFile = node['tasktop-sync-studio']['source']
 
-localFile = Pathname.new( node['tasktop-sync-studio']['path'] ).join( node['tasktop-sync-studio']['destination'] )
+localFile = Pathname.new( node['tasktop-sync-studio']['destination'] )
 
 junkFile = Pathname.new( "wget_junk" )  
 cookieFile = node['tasktop-sync-studio']['cookieFile'] || "cookies.txt"
