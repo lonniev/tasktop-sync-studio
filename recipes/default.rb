@@ -26,25 +26,28 @@ end
 # 1. get base url and save its cookies in file
 # 2. get protected content using stored cookies
 
-repoSite = 'https://files.tasktop.com/public.php'
-repoId = '7d481ea5e31a0a39b5d9eade8c90697e'
-repoPass = 'foo'
+repoSite = node['tasktop-sync-studio']['loginUrl']
+repoId = node['tasktop-sync-studio']['username']
+repoPass = node['tasktop-sync-studio']['password']
 
-filePath = '//Sodius-Engineering.license'
-asLocalFile = 'Sodius-Engineering.license'
+remoteFile = node['tasktop-sync-studio']['source']
 
-junkFile = Pathname.new( Chef::Config[:file_cache_path] ).join( "wget_junk" )
-  
-remoteFile = "#{repoSite}?service=files&t=#{repoId}&download&path=#{filePath}"
+localFile = Pathname.new( node['tasktop-sync-studio']['path'] ).join( node['tasktop-sync-studio']['destination'] )
 
-cookieFile = Pathname.new( Chef::Config[:file_cache_path] ).join( "cookies.txt" )
+junkFile = Pathname.new( "wget_junk" )  
+cookieFile = node['tasktop-sync-studio']['cookieFile'] || "cookies.txt"
 
 wget = '"c:\Program Files\GnuWin32\bin\wget.exe"'
 
-execute 'authenticate at Tasktop and save session cookies' do
-  command %Q(#{wget} --post-data "password=#{repoPass}" --no-check-certificate --cookies=on --keep-session-cookies --save-cookies=#{cookieFile} "#{repoSite}?service=files&t=#{repoId}" -O #{junkFile})
-end
+Dir.mktmpdir { |tdir|
+  
+  execute "authenticate at #{repoSite} and save session cookies" do
+    cwd tdir
+    command %Q(#{wget} --post-data "password=#{repoPass}" --no-check-certificate --cookies=on --keep-session-cookies --save-cookies=#{cookieFile} "#{repoSite}?service=files&t=#{repoId}" -O #{junkFile})
+  end
 
-execute 'download remote file with session cookies' do
-  command %Q(#{wget} -O #{asLocalFile} --referer=#{repoSite} --cookies=on --load-cookies=#{cookieFile} --keep-session-cookies --save-cookies=#{cookieFile} #{remoteFile})
-end
+  execute "download #{remoteFile} as #{localFile} with session cookies" do
+    cwd tdir
+    command %Q(#{wget} -O #{localFile} --referer=#{repoSite} --cookies=on --load-cookies=#{cookieFile} --keep-session-cookies --save-cookies=#{cookieFile} #{remoteFile})
+  end
+}
