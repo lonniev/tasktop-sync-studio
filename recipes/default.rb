@@ -33,16 +33,18 @@ repoPass = 'foo'
 filePath = '//Sodius-Engineering.license'
 asLocalFile = 'Sodius-Engineering.license'
 
-remote_file = "#{repoSite}?service=files&t=#{repoId}&download&path=#{filePath}"
+junkFile = Pathname.new( Chef::Config[:file_cache_path] ).join( "wget_junk" )
+  
+remoteFile = "#{repoSite}?service=files&t=#{repoId}&download&path=#{filePath}"
 
 cookieFile = Pathname.new( Chef::Config[:file_cache_path] ).join( "cookies.txt" )
 
 wget = 'c:\Program/ Files\GnuWin32\bin\wget.exe'
 
 execute 'authenticate at Tasktop and save session cookies' do
-  command '#{wget} --post-data "password=#{repoPass}" --no-check-certificate --cookies=on --keep-session-cookies --save-cookies=#{cookieFile} "#{repoSite}?service=files&t=#{repoId}" -O #{junkFile}'
+  command %Q(#{wget} --post-data "password=#{repoPass}" --no-check-certificate --cookies=on --keep-session-cookies --save-cookies=#{cookieFile} "#{repoSite}?service=files&t=#{repoId}" -O #{junkFile})
 end
 
 execute 'download remote file with session cookies' do
-  command '#{wget} -O #{asLocalFile} --referer=#{repoSite} --cookies=on --load-cookies=#{cookieFile} --keep-session-cookies --save-cookies=#{cookieFile} #{remoteFile}'
+  command %Q(#{wget} -O #{asLocalFile} --referer=#{repoSite} --cookies=on --load-cookies=#{cookieFile} --keep-session-cookies --save-cookies=#{cookieFile} #{remoteFile})
 end
